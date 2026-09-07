@@ -81,3 +81,12 @@ pytest                              # 运行工程自测（隔离环境，无需
 # Docker 一键部署（web + worker + nginx + mysql + redis）
 docker compose up -d --build
 ```
+
+## 注意事项
+
+- **密钥安全**：所有敏感配置均通过根目录 `.env` 注入（已加入 `.gitignore`），仓库只提供 `.env.example` 模板；克隆后复制模板、按需填写即可运行，杜绝密钥入库风险。
+- **回归隔离、生产零污染**：工程自带独立测试配置 `tripgenius.test_settings`，`pytest` 执行时自动切换 SQLite 内存库、内存缓存、Celery 同步模式与临时向量库目录——批量回归不触碰任何 MySQL / Redis / 生产向量数据，可在开发机上放心反复运行。
+- **LLM 供应商可无缝切换**：Agent 推理、用例生成、失败归因与 RAG 问答统一走 OpenAI 兼容接口（`OPENAI_BASE_URL` / `OPENAI_MODEL`），示例默认 DeepSeek，切换到 GPT、通义等仅需修改环境变量，业务代码零改动。
+- **Agent 长循环可控**：多轮 Tool Calling 下工具返回自动截断以控制上下文，并设最大推理步数上限（默认 15），超限返回明确状态，避免失控循环与 Token 浪费。
+- **接口变化自动感知**：被测系统新增或调整接口后，接口扫描由 URLconf + DRF Serializer 动态驱动，无需人工维护接口清单；AI 生成用例始终以真实参数结构为约束，天然防止“幻觉”用例。
+- **开箱即用的部署形态**：`docker compose` 一键编排 web（gunicorn）、worker（Celery）、nginx、MySQL、Redis 五个服务，配合 Nginx 静态资源与反向代理配置，可直接衔接 CI/CD 与发布流程。
