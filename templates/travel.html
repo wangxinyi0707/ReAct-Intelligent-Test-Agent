@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>旅行计划</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-10">
+        <h1 class="text-3xl font-bold">我的旅行计划</h1>
+
+        <div class="bg-white p-5 mt-5">
+            <input id="title" class="border p-2" placeholder="计划名称">
+            <input id="destination" class="border p-2" placeholder="目的地">
+            <input id="start" class="border p-2" placeholder="开始日期">
+            <input id="end" class="border p-2" placeholder="结束日期">
+            <button onclick="createPlan()" class="bg-blue-500 text-white px-5 py-2">创建</button>
+        </div>
+
+        <div id="plans" class="mt-5"></div>
+    </div>
+    <script src="/static/js/travel.js"></script>
+</body>
+</html>

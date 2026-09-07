@@ -1,0 +1,68 @@
+services:
+
+  web:
+    build: .
+    container_name: tripgenius_web
+    command: gunicorn tripgenius.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    expose:
+      - "8000"
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+
+  worker:
+    build: .
+    container_name: tripgenius_worker
+    command: celery -A tripgenius worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+
+  nginx:
+    image: nginx:latest
+    container_name: tripgenius_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx_trip.conf:/etc/nginx/conf.d/default.conf
+      - ./staticfiles:/app/staticfiles
+    depends_on:
+      - web
+
+
+  mysql:
+    image: mysql:8.0
+    container_name: tripgenius_mysql
+    environment:
+      MYSQL_DATABASE: tripgenius
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+  redis:
+    image: redis:7
+    container_name: tripgenius_redis
+    ports:
+      - "6379:6379"
+
+
+volumes:
+  mysql_data:

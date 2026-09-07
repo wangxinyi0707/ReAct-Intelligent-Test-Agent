@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Coverage
+.coverage
+htmlcov/
+coverage.xml
+
+# Lint cache
+.ruff_cache/
+
+# Django
+*.log
+db.sqlite3
+staticfiles/
+logs/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# RAG Vector Database
+rag_data/chroma_db/
+
+# Test
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
